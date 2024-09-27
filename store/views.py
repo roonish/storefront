@@ -6,8 +6,8 @@ from rest_framework.views import APIView
 from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIView
 from rest_framework.mixins import CreateModelMixin
 from rest_framework.viewsets import ModelViewSet
-from .models import Product,Collection
-from .serializers import ProductSerializer,CollectionSerializer
+from .models import Product,Collection,Review
+from .serializers import ProductSerializer,CollectionSerializer,ReviewSerializer
 from django.db.models import Count
 
 
@@ -24,7 +24,9 @@ class CollectionViewSet(ModelViewSet):
     serializer_class = CollectionSerializer
     lookup_field='id'
 
-
+class ReviewViewSet(ModelViewSet):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
 
 
 # class ProductList(ListCreateAPIView):
