@@ -107,3 +107,4 @@ class Review(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE,related_name='reviews')
     description = models.TextField()
     name = models.CharField(max_length=255)
+
