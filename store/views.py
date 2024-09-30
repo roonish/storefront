@@ -25,8 +25,11 @@ class CollectionViewSet(ModelViewSet):
     lookup_field='id'
 
 class ReviewViewSet(ModelViewSet):
-    queryset = Review.objects.all()
+    # queryset = Review.objects.all()
     serializer_class = ReviewSerializer
+    #in order to filter we r using get_queryset function instead of  queryset variable
+    def get_queryset(self):
+        return Review.objects.filter(product_id=self.kwargs['product_id'])
 
     def get_serializer_context(self):
         return {'product_id': self.kwargs['product_id']}

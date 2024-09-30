@@ -47,16 +47,14 @@ class ProductSerializer(serializers.ModelSerializer):
         return product
     
 
-class ReviewSerializer(serializers.Serializer):
+class ReviewSerializer(serializers.ModelSerializer):
      class Meta:
           model = Review
-          fields = ['id','product','description','name']
+          fields = ['id','description','name']
 
      def create(self, validated_data):
         # Get the product instance
         product_id = self.context['product_id']
-        product = Product.objects.get(id=product_id)
         
-        # Create and return the review
-        review = Review.objects.create(product=product, **validated_data)
+        review = Review.objects.create(product_id=product_id, **validated_data)
         return review
