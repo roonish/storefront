@@ -14,9 +14,17 @@ from django.db.models import Count
 #use of viewset
 
 class ProductViewSet(ModelViewSet):
-    queryset =  Product.objects.select_related('collection').all()
+    # queryset =  Product.objects.select_related('collection').all()
     serializer_class= ProductSerializer 
     lookup_field= 'id'
+
+    def get_queryset(self):
+        queryset = Product.objects.all()
+        collection_id = self.request.query_params.get('collection_id')
+        if collection_id is not None:
+            queryset=queryset.filter(collection_id=collection_id)
+
+        return queryset
 
 
 class CollectionViewSet(ModelViewSet):
