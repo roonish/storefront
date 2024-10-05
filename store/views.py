@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
+from django_filters.rest_framework import  DjangoFilterBackend
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -15,16 +16,21 @@ from django.db.models import Count
 
 class ProductViewSet(ModelViewSet):
     # queryset =  Product.objects.select_related('collection').all()
+    queryset = Product.objects.all()
     serializer_class= ProductSerializer 
     lookup_field= 'id'
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['collection_id']
 
-    def get_queryset(self):
-        queryset = Product.objects.all()
-        collection_id = self.request.query_params.get('collection_id')
-        if collection_id is not None:
-            queryset=queryset.filter(collection_id=collection_id)
 
-        return queryset
+#removing this cause we are using 3rd party library django_filters
+    # def get_queryset(self):
+    #     queryset = Product.objects.all()
+    #     collection_id = self.request.query_params.get('collection_id')
+    #     if collection_id is not None:
+    #         queryset=queryset.filter(collection_id=collection_id)
+
+    #     return queryset
 
 
 class CollectionViewSet(ModelViewSet):
