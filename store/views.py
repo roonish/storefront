@@ -25,7 +25,7 @@ class ProductViewSet(ModelViewSet):
     filterset_fields = ['collection_id']
     search_fields = ['title','description']
     ordering_fields = ['unit_price','last_update']
-    pagination_class= PageNumberPagination
+    # pagination_class= PageNumberPagination
 
 
 #removing this cause we are using 3rd party library django_filters
