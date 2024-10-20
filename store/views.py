@@ -6,11 +6,11 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIView
 from rest_framework.mixins import CreateModelMixin
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet,GenericViewSet
 from rest_framework.filters import SearchFilter,OrderingFilter
 from rest_framework.pagination import PageNumberPagination
-from .models import Product,Collection,Review
-from .serializers import ProductSerializer,CollectionSerializer,ReviewSerializer
+from .models import Product,Collection,Review,Cart
+from .serializers import ProductSerializer,CollectionSerializer,ReviewSerializer,CartSerializer
 from django.db.models import Count
 
 
@@ -123,3 +123,7 @@ class CollectionView(RetrieveUpdateDestroyAPIView):
     #     return Response()
 
 
+class CartViewSet(CreateModelMixin,GenericViewSet):
+        queryset= Cart.objects.all()
+        serializer_class= CartSerializer
+        # lookup_field='id'
