@@ -10,12 +10,15 @@ router.register('cart',views.CartViewSet)
 products_router =  routers.NestedDefaultRouter(router, 'product', lookup = 'product')
 products_router.register('reviews',views.ReviewViewSet,basename='product-reviews')
 
+carts_router = routers.NestedDefaultRouter(router,'carts',lookup='cart')
+carts_router.register('items',views.CartItemViewSet,basename='cart-items')
 
 urlpatterns = [
 #router.urls
 
     path('',include(router.urls)),
     path('',include(products_router.urls)),
+    path('',include(carts_router.urls))
 
     # path('product/',views.ProductList.as_view()),
     # #int will validate so only integer can be sent as an id

@@ -5,12 +5,12 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIView
-from rest_framework.mixins import CreateModelMixin,RetrieveModelMixin
+from rest_framework.mixins import CreateModelMixin,RetrieveModelMixin,DestroyModelMixin
 from rest_framework.viewsets import ModelViewSet,GenericViewSet
 from rest_framework.filters import SearchFilter,OrderingFilter
 from rest_framework.pagination import PageNumberPagination
-from .models import Product,Collection,Review,Cart
-from .serializers import ProductSerializer,CollectionSerializer,ReviewSerializer,CartSerializer
+from .models import Product,Collection,Review,Cart,CartItem
+from .serializers import ProductSerializer,CollectionSerializer,ReviewSerializer,CartSerializer,CartItemSerializer
 from django.db.models import Count
 
 
@@ -123,7 +123,13 @@ class CollectionView(RetrieveUpdateDestroyAPIView):
     #     return Response()
 
 
-class CartViewSet(CreateModelMixin,RetrieveModelMixin,GenericViewSet):
-        queryset= Cart.objects.all()
+class CartViewSet(CreateModelMixin,RetrieveModelMixin,DestroyModelMixin, GenericViewSet):
+        queryset= Cart.objects.prefetch_related('items__product').all()
         serializer_class= CartSerializer
         # lookup_field='id'
+
+class CartItemViewSet(ModelViewSet):
+     def get_queryset(self):
+          return CartItem.objects.filter(card_id=self.kwargs['cart_pk'])
+     
+     serializer_class= CartItemSerializer
