@@ -10,7 +10,7 @@ from rest_framework.viewsets import ModelViewSet,GenericViewSet
 from rest_framework.filters import SearchFilter,OrderingFilter
 from rest_framework.pagination import PageNumberPagination
 from .models import Product,Collection,Review,Cart,CartItem
-from .serializers import ProductSerializer,CollectionSerializer,ReviewSerializer,CartSerializer,CartItemSerializer
+from .serializers import ProductSerializer,CollectionSerializer,ReviewSerializer,CartSerializer,CartItemSerializer,AddCartItemSerializer
 from django.db.models import Count
 
 
@@ -130,6 +130,14 @@ class CartViewSet(CreateModelMixin,RetrieveModelMixin,DestroyModelMixin, Generic
 
 class CartItemViewSet(ModelViewSet):
      def get_queryset(self):
-          return CartItem.objects.filter(card_id=self.kwargs['cart_pk'])
+          return CartItem.objects \
+                .filter(card_id=self.kwargs['cart_pk']) \
+                .select_related('product')
      
-     serializer_class= CartItemSerializer
+     def get_serializer_class(self):
+          if self.request.method=='POST':
+               return AddCartItemSerializer
+          return CartItemSerializer
+
+     def get_serializer_context(self):
+          return {'cart_id':self.kwargs['cart_pk']}
