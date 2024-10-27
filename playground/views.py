@@ -113,4 +113,4 @@ def say_hello(request):
     # with connection.cursor() as cursor:
     #     cursor.execute('SELECT *')
 
-    return render(request, 'hello.html', {'name': 'Mosh','queryset':list(queryset)})
+    return render(request, 'hello.html', {'name': 'Ronish','queryset':list(queryset)})
