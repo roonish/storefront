@@ -10,7 +10,7 @@ router.register('cart',views.CartViewSet)
 products_router =  routers.NestedDefaultRouter(router, 'product', lookup = 'product')
 products_router.register('reviews',views.ReviewViewSet,basename='product-reviews')
 
-carts_router = routers.NestedDefaultRouter(router,'carts',lookup='cart')
+carts_router = routers.NestedDefaultRouter(router,'cart',lookup='cart')
 carts_router.register('items',views.CartItemViewSet,basename='cart-items')
 
 urlpatterns = [
