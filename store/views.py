@@ -10,7 +10,7 @@ from rest_framework.viewsets import ModelViewSet,GenericViewSet
 from rest_framework.filters import SearchFilter,OrderingFilter
 from rest_framework.pagination import PageNumberPagination
 from .models import Product,Collection,Review,Cart,CartItem
-from .serializers import ProductSerializer,CollectionSerializer,ReviewSerializer,CartSerializer,CartItemSerializer,AddCartItemSerializer,UpdateCartItemSerializer
+from .serializers import ProductSerializer,CollectionSerializer,ReviewSerializer,CartSerializer,CartItemSerializer,AddCartItemSerializer,UpdateCartItemSerializer,OrderSerializer
 from django.db.models import Count
 
 
@@ -146,3 +146,17 @@ class CartItemViewSet(ModelViewSet):
 
      def get_serializer_context(self):
           return {'cart_id':self.kwargs['cart_pk']}
+     
+
+class OrderViewSet(ModelViewSet):
+    serializer_class= OrderSerializer
+    #  permission_classes=[IsAuthenticated]
+
+    def get_serializer_context(self):
+        return {'user_id': self.request.user.id}
+    
+    def get_queryset(self):
+         user = self.request.user
+
+         if user.is_staff:
+              
