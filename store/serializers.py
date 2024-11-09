@@ -120,6 +120,7 @@ class UpdateCartItemSerializer(serializers.ModelSerializer):
         fields = ['quantity']
 
 class OrderItemSerializer(serializers.ModelSerializer):
+    product = SimpleProductSerializer(many=True)
     class Meta:
         model= OrderItem
         fields = ['id','product','unit_price','quantity']
