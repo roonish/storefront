@@ -137,8 +137,20 @@ class CreateOrderSerializer(serializers.Serializer):
     cart_id = serializers.UUIDField()
 
     def save(self, **kwargs):
+        cart_id = self.validated_data['cart_id']
         print(self.validated_data['cart_id'])
         print(self.context['user_id'])   
         
         (customer, created) = Customer.objects.get_or_create(user_id=self.context['user_id'])
-        Order.objects.create(customer= customer)
+        order = Order.objects.create(customer= customer)
+
+        carts_items = CartItem.objects.select_related('product').filter(cart_id=cart_id)
+        order_items= [ OrderItem(
+            order = order,
+            product = item.product,
+            unit_price = item.product.unit_price,
+            quantity=item.quantity
+        ) for item in carts_items]
+        OrderItem.objects.bulk_create(order_items)
+
+        Cart.objects.filter(pk=cart_id).delete()
