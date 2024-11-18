@@ -85,8 +85,6 @@ class CollectionList(ListCreateAPIView):
 #         return Response(serializer.data)    
 
 
-
-
 class CollectionView(RetrieveUpdateDestroyAPIView):
     queryset=Collection.objects.annotate(
         product_count = Count('product'))
@@ -122,7 +120,6 @@ class CollectionView(RetrieveUpdateDestroyAPIView):
     #     collection.delete()
     #     return Response()
 
-
 class CartViewSet(CreateModelMixin,RetrieveModelMixin,DestroyModelMixin, GenericViewSet):
         queryset= Cart.objects.prefetch_related('items__product').all()
         serializer_class= CartSerializer
@@ -149,8 +146,13 @@ class CartItemViewSet(ModelViewSet):
      
 
 class OrderViewSet(ModelViewSet):
-    serializer_class=OrderSerializer
+    # serializer_class=OrderSerializer
     # permission_classes=[IsAuthenticated]
+
+    def get_permissions(self):
+        if self.request.method in ['PUT','PATCH','DELETE']:
+            return [IsAdminUser()]
+            return [IsAuthenticated()]
 
     def create(self, request, *args, **kwargs):
         serializer = CreateOrderSerializer(data=request.data,
@@ -160,8 +162,6 @@ class OrderViewSet(ModelViewSet):
         serializer= OrderSerializer(order)
         return Response(serializer.data)
 
-        
-        
     def get_serializer_class(self):
          if self.request.method=='POST':
               return CreateOrderSerializer
